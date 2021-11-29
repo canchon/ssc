@@ -6,63 +6,50 @@ const char *ssid = "FAMILIA ARBOLEDA";
 const char *password = "30900410";
 #define url "http://serverall.000webhostapp.com/"
 
-void espInit()
-{
-	delay(10);
+void espInit(){
+	delay(50);
 	WiFi.begin(ssid, password);
-
 	Serial.print("Conectando...");
-	while (WiFi.status() != WL_CONNECTED)
-	{ //Check for the connection
+	while (WiFi.status() != WL_CONNECTED){ //Check for the connection
 		delay(500);
 		Serial.print(".");
 	}
-
-	Serial.print("Conectado con éxito, mi IP es: ");
-	Serial.println(WiFi.localIP());
+	Serial.print("Conectado con éxito");
 }
 
-String fetch(String module, String accion, String parameters)
-{
-	if (WiFi.status() == WL_CONNECTED)
-	{ //Check WiFi connection status
-
+String fetch(String module, String accion, String parameters){
+	// delay(10000);
+	if (WiFi.status() == WL_CONNECTED){ //Check WiFi connection status
 		WiFiClient client;
 		HTTPClient http;
 
-		#define json "{\"module\":\"" + module + "\", \"accion\": \"" + accion + "\", \"parameters\": \"" + parameters + "\"}"
+		#define json "{\"module\":\"" + module + "\", \"accion\": \"" + accion + "\", \"parameters\": " + parameters + "}"
 		#define dataToSend "json=" + String(json)
-		http.begin(client, url); //Indicamos el destino
-		Serial.println(dataToSend);
+		http.begin(client, url);
+		Serial.println("Datos a enviar: " + String(dataToSend));
 
 		http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-		int responseCode = http.POST(dataToSend); //Enviamos el post pasándole, los datos que queremos enviar. (esta función nos devuelve un código que guardamos en un int)
+		int responseCode = http.POST(dataToSend); //Enviamos el post pasándole los datos que queremos enviar. retorna un código http
 
-		if (responseCode > 0)
-		{
-			Serial.println("Código HTTP ► " + String(responseCode)); //Print return code
-			Serial.println(http.getString());
+		if (responseCode > 0){ //no hubo errores en hacer la petición
+			Serial.println("Código HTTP ► " + String(responseCode));
 
-			if (responseCode == 200)
-			{
+			if (responseCode == 200) { //La API envió una respuesta
 				Serial.println("El servidor respondió ▼ ");
-				Serial.println(http.getString());
+				Serial.println(http.getString() + "▼");
 				return http.getString();
 			}
 		}
-		else
-		{
+		else{
 			Serial.print("Error enviando POST, código: ");
 			Serial.println(responseCode);
-			//  return "Error enviando POST, código: " + String(responseCode);
 		}
-
 		http.end(); //libero recursos
 	}
-	else
-	{
+	else{
 		Serial.println("Error en la conexión WIFI");
-		// return "Error en la conexión WIFI";
 	}
-	return "";
+	return "\n\n\n\n▼fetch▼\n\n\n\n";
 }
+
+
