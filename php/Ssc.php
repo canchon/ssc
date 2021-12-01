@@ -40,6 +40,19 @@ class Ssc{
         }
         return 1;
     }
+
+    public function sendTemperatureAndHumidityLogs($arg){
+        $sql = "SELECT * FROM ssc_history_temperature_humidity";
+        $array = $this->Conexion->connection->query($sql);
+        if(!$this->Conexion->connection->query($sql) === true){
+            echo "\n- Error en la petición -> " . $this->connection_error . "\n";
+        }
+        $response = array();
+        while($row = $array->fetch_assoc()){
+            array_push($response,$row);
+        }
+        return $response;
+    }
 }
 ?>
 // 

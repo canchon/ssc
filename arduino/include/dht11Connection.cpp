@@ -4,17 +4,18 @@
 #define DHTTYPE DHT11   
 DHT dht(DHTPIN, DHTTYPE);
 
-void dhtInit() {
+void dhtInit(){
   dht.begin();
-  Serial.println("Sensor dht11 (temperatura y humedad) Listo para usar.");
+  Serial.println("\nSensor dht11 (temperatura y humedad) Listo para usar.");
 }
 
 float getTemperature(){
   #define temperature dht.readTemperature()
   if (isnan(temperature)) {
-    Serial.print(F("Failed to read from DHT sensor!"));
+    Serial.println(F("\nNo se pudo leer la temperatura"));
     return 0.0;
   }else{
+    Serial.println("\ntemperatura: " + String(temperature) + "°c");
     return temperature;
   }
 }
@@ -22,9 +23,10 @@ float getTemperature(){
 float getHumidity(){
   #define humidity dht.readHumidity()
   if (isnan(humidity)) {
-    Serial.print(F("Failed to read from DHT sensor!"));
+    Serial.println(F("\nNo se pudo leer la humedad"));
     return 0.0;
   }else{
+    Serial.println("\nHumedad relativa: " + String(humidity) + "%");
     return humidity;
   }
 }
